@@ -1,0 +1,57 @@
+[
+    {
+        "name": "BSD 2-Clause License",
+        "desc": "Unrestrictive license.",
+        "path": "BSD2-LICENSE"
+    },
+    {
+        "name": "BSD 3-Clause License",
+        "desc": "Unrestrictive license.",
+        "path": "BSD3-LICENSE"
+    },
+    {
+        "name": "BSD 4-Clause License",
+        "desc": "Unrestrictive license.",
+        "path": "BSD4-LICENSE"
+    },
+    {
+        "name": "MIT License",
+        "desc": "Simple, unrestrictive license.",
+        "path": "MIT-LICENSE"
+    },
+    {
+        "name": "GNU GPL v3",
+        "desc": "Strict license, but ensures everything is kept free/OSS.",
+        "path": "GPLv3-LICENSE"
+    },
+    {
+        "name": "GNU AGPL v3",
+        "desc": "TODO",
+        "path": "AGPLv3-LICENSE"
+    },
+    {
+        "name": "GNU LGPL v3",
+        "desc": "TODO",
+        "path": "LGPLv3-LICENSE"
+    },
+    {
+        "name": "Mozilla Public License 2.0",
+        "desc": "TODO",
+        "path": "MPL2.0-LICENSE"
+    },
+    {
+        "name": "Apache License 2.0",
+        "desc": "TODO",
+        "path": "APACHE2.0-LICENSE"
+    },
+    {
+        "name": "Boost Software License 1.0",
+        "desc": "TODO",
+        "path": "BOOST-LICENSE"
+    },
+    {
+        "name": "The Unlicense",
+        "desc": "No conditions. Your work will be public domain.",
+        "path": "UNLICENSE-LICENSE"
+    }
+]
