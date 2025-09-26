@@ -46,11 +46,12 @@ If you want to install Licensinator, you need to run the following code in a ter
 ```bash
 cargo build
 sudo make install
-
-# if you use bash
+```
+If this is your first time installing licensinator, you **NEED** to run one of these commands. If it's not your first time, **DO NOT RUN IT!**
+```bash
+# for bash
 echo "export PATH=$PATH:/usr/local/licensinator/" >> ~/.bashrc
-
-# if you use zsh
+# for zsh
 echo "export PATH=$PATH:/usr/local/licensinator/" >> ~/.zshrc
 ```
 
