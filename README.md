@@ -39,7 +39,7 @@ I want to implement these licenses next:
 * ... and more!
 
 # Installation
->[!CRITICAL]
+>[!CAUTION]
 > This assumes you're using Linux.
 
 If you want to install Licensinator, you need to run the following code in a terminal:
