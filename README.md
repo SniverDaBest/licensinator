@@ -4,8 +4,7 @@
 [![](https://tokei.rs/b1/github/SniverDaBest/licensinator)](https://github.com/SniverDaBest/licensinator)
 
 # Info
-Licensinator is a smallish Rust program to check the current license of a project with one command.\
-It will ~~eventually~~ soon have the ability to change and/or create license files in your own projects!
+Licensinator is a smallish Rust program to create, check or modify the license of a project with one command.\
 
 # Bugs
 There's probably a million bugs in this code, but I just don't really have the time to find and fix them all at once.\
@@ -57,4 +56,5 @@ echo "export PATH=$PATH:/usr/local/licensinator/" >> ~/.zshrc
 
 # License
 This program is licensed under the BSD 2-Clause License. See `LICENSE`.\
-Or maybe run `licensinator` after installing, and see that it works for yourself!
+Or maybe run `licensinator` after installing, and see that it works for yourself!\
+If you haven't installed it, just do `cargo run`.

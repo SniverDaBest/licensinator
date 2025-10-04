@@ -1,6 +1,7 @@
+use chrono::{Utc, Datelike};
 use serde::Deserialize;
 use std::{
-    env, fmt::{self, Formatter}, fs::{self, File}, io::{self, Read, Write}, path::PathBuf, process, str::FromStr
+    env, fmt::{self, Formatter}, fs::{self, File}, io::{self, Read, Write}, path::{Path, PathBuf}, process, str::FromStr
 };
 
 #[derive(Debug, Deserialize)]
@@ -323,6 +324,48 @@ fn license_from_type(ltype: LicenseType, licenses: &Vec<License>) -> Option<Lice
     return None;
 }
 
+fn get_username_from_input() -> String {
+    print!("Enter your name (for license): ");
+    io::stdout().flush().unwrap();
+
+    let mut name = String::new();
+    io::stdin().read_line(&mut name).unwrap();
+
+    let name = name.trim();
+    if name.is_empty() {
+        return "Unknown".to_string();
+    }
+
+    return name.to_string();
+}
+
+fn get_current_year() -> String {
+    let x = Utc::now().year();
+    return format!("{}", x);
+}
+
+fn fill_placeholders(template: &str, user: &str, year: &str) -> String {
+    let mut s = template.replace("[year]", year);
+    s = s.replace("[user]", user);
+    return s;
+}
+
+fn backup_existing_license(path: &Path) -> io::Result<()> {
+    if path.exists() {
+        let backup_name = format!(
+            "LICENSE.bak.{}",
+            Utc::now().format("%Y%m%d%H%M%S")
+        );
+        fs::rename(path, backup_name)?;
+    }
+    return Ok(());
+}
+
+fn write_license_file(path: &Path, content: &str) -> io::Result<()> {
+    fs::write(path, content)?;
+    return Ok(());
+}
+
 fn main() {
     println!(
         "\x1b[33mLicensinator\x1b[0m - \x1b[32mv{}\x1b[0m",
@@ -350,4 +393,100 @@ fn main() {
     }
 
     println!("Local license: {}", license_from_type(ltype, &licenses).unwrap_or(License { name: "Unknown/None".to_string(), desc: "Unknown/None".to_string(), content: None }));
+    println!();
+    println!("Available tools:");
+    println!(" 1) list");
+    println!(" 2) modify/create");
+    println!(" 3) quit");
+    println!();
+
+    let mut buf = String::new();
+
+    loop {
+        print!("Which tool do you want to use? [1-3]: ");
+        io::stdout().flush().unwrap();
+        io::stdin().read_line(&mut buf).unwrap();
+
+        match buf.as_str().trim() {
+            "1" => {
+                println!("Licenses:");
+                for l in &licenses {
+                    println!(" - {}", l);
+                }
+            }
+
+            "2" => {
+                println!("Which of these licenses would you like to use?");
+                for (i, license) in licenses.iter().enumerate() {
+                    println!(" {}) {}", i + 1, license);
+                }
+
+                loop {
+                    buf.clear();
+
+                    print!("Select a license [1-{}] or 'q' to cancel: ", licenses.len());
+                    io::stdout().flush().unwrap();
+                    io::stdin().read_line(&mut buf).unwrap();
+
+                    let input = buf.trim().to_lowercase();
+                    if input == "q" {
+                        println!("Canceled.");
+                        break;
+                    }
+
+                    let idx: usize = match input.parse::<usize>() {
+                        Ok(num) if num >= 1 && num <= licenses.len() => num - 1,
+                        _ => {
+                            println!("Invalid selection. Try again.");
+                            continue;
+                        }
+                    };
+
+                    let selected = &licenses[idx];
+
+                    if selected.content.is_none() {
+                        println!("That license has no template file associated with it.");
+                        break;
+                    }
+
+                    let user = get_username_from_input();
+                    let year = get_current_year();
+
+                    let filled = fill_placeholders(
+                        selected.content.as_ref().unwrap(),
+                        &user,
+                        &year,
+                    );
+
+                    let license_path = Path::new("LICENSE");
+                    if let Err(e) = backup_existing_license(license_path) {
+                        eprintln!("Warning: could not back up old LICENSE file: {}", e);
+                    }
+
+                    match write_license_file(license_path, &filled) {
+                        Ok(_) => {
+                            println!(
+                                "License '{}' installed successfully to '{}'.",
+                                selected.name,
+                                license_path.display()
+                            );
+                        }
+                        Err(e) => {
+                            eprintln!("Failed to write license: {}", e);
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            "3" => process::exit(0),
+
+            _ => {
+                println!("Invalid input! Please enter a number from 1 - 3.");
+            }
+        }
+
+        buf.clear();
+    }
 }
